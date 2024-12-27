@@ -1,160 +1,110 @@
-import org.example.arge.CarSkeleton;
-import org.example.arge.ElectricCar;
-import org.example.arge.GasPoweredCar;
-import org.example.arge.HybridCar;
-import org.example.company.Car;
-import org.example.company.Ford;
-import org.example.company.Holden;
-import org.example.company.Mitsubishi;
+import org.example.Person;
+import org.example.Wall;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import org.example.Person;
+import org.example.Wall;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(ResultAnalyzer.class)
 public class MainTest {
 
-    Car car;
-    Mitsubishi mitsubishi;
-    Holden holden;
-    Ford ford;
-    CarSkeleton carSkeleton;
-    GasPoweredCar gasPoweredCar;
-    HybridCar hybridCar;
-    ElectricCar electricCar;
-
+    private Person person;
+    private Wall wall;
 
     @BeforeEach
     void setUp() {
-        car = new Car(4, "Mercedes");
-        mitsubishi = new Mitsubishi(4, "Mitsubishi");
-        holden = new Holden(4, "Holden");
-        ford = new Ford(4, "Ford");
-        carSkeleton = new CarSkeleton("Test", "test");
-        electricCar = new ElectricCar("Test", "test", 10, 5);
-        gasPoweredCar = new GasPoweredCar("Test", "test", 10, 4);
-        hybridCar = new HybridCar("Test", "test", 10, 5, 4);
+        person = new Person("John", "Doe", 20);
+        wall = new Wall(10, 10);
     }
 
-    @DisplayName("Car sınıf değişkenleri doğru access modifier değerlerine sahip mi ?")
+    @DisplayName("Person sınıf değişkenleri doğru tipte mi ?")
     @Test
-    public void testCarAccessModifiers() throws NoSuchFieldException {
-        Field nameField = car.getClass().getDeclaredField("name");
-        Field cylindersField = car.getClass().getDeclaredField("cylinders");
-        Field engineField = car.getClass().getDeclaredField("engine");
-        Field wheelsField = car.getClass().getDeclaredField("wheels");
-
-        assertEquals(nameField.getModifiers(), 2);
-        assertEquals(cylindersField.getModifiers(), 2);
-        assertEquals(engineField.getModifiers(), 2);
-        assertEquals(wheelsField.getModifiers(), 2);
+    public void testPersonTypes() {
+        assertThat(person.getFirstName(), instanceOf(String.class));
+        assertThat(person.getLastName(), instanceOf(String.class));
+        assertThat(person.getAge(), instanceOf(Integer.class));
     }
 
-    @DisplayName("Car sınıf değişkenleri doğru type değerlerine sahip mi ?")
+    @DisplayName("getFirstName doğru çalışıyor mu?")
     @Test
-    public void testLampAccessModifiers() throws NoSuchFieldException {
-        assertThat(car.getName(), instanceOf(String.class));
-        assertThat(car.getCylinders(), instanceOf(Integer.class));
+    public void testPersonGetFirstName() {
+        assertEquals(person.getFirstName(), "John");
     }
 
-    @DisplayName("Car startEngine metodu doğru çalışıyor mu ?")
+    @DisplayName("getLastName doğru çalışıyor mu?")
     @Test
-    public void testStartEngineMethod() throws NoSuchFieldException {
-        PrintStream saveOut = System.out;
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        assertEquals(car.startEngine(), "the car's engine is starting");
-        assertThat(out.toString(), containsString(car.getClass().getSimpleName()));
+    public void testPersonGetLastName() {
+        assertEquals(person.getLastName(), "Doe");
     }
 
-    @DisplayName("Car accelerate metodu doğru çalışıyor mu ?")
+    @DisplayName("getAge doğru çalışıyor mu?")
     @Test
-    public void testAccelerate() throws NoSuchFieldException {
-        PrintStream saveOut = System.out;
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        assertEquals(car.accelerate(), "the car is accelerating");
-        assertThat(out.toString(), containsString(car.getClass().getSimpleName()));
+    public void testPersonGetAge() {
+        assertEquals(person.getAge(), 20);
     }
 
-    @DisplayName("Car brake metodu doğru çalışıyor mu ?")
+    @DisplayName("isTeen doğru çalışıyor mu?")
     @Test
-    public void testBrake() throws NoSuchFieldException {
-        PrintStream saveOut = System.out;
-        final ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        assertEquals(car.brake(), "the car is braking");
-        assertThat(out.toString(), containsString(car.getClass().getSimpleName()));
+    public void testPersonIsTeen() {
+        assertEquals(new Person("Jane", "Doe", 18).isTeen(), true);
+        assertEquals(new Person("Jane", "Doe", 22).isTeen(), false);
+        assertEquals(new Person("Jane", "Doe", 13).isTeen(), true);
     }
 
-    @DisplayName("Mitsubishi, Ford, Holden doğru sınıf tipinde mi ?")
+    @DisplayName("Wall sınıf değişkenleri doğru tipte mi ?")
     @Test
-    public void testChildClassTypes() throws NoSuchFieldException {
-        assertThat(mitsubishi, instanceOf(Car.class));
-        assertThat(ford, instanceOf(Ford.class));
-        assertThat(holden, instanceOf(Holden.class));
+    public void testWallTypes() {
+        assertThat(wall.getWidth(), instanceOf(Double.class));
+        assertThat(wall.getHeight(), instanceOf(Double.class));
     }
 
-    @DisplayName("CarSkeleton sınıf değişkenleri doğru type değerlerine sahip mi ?")
+    @DisplayName("Wall getWidth metodu doğru çalışıyor mu ?")
     @Test
-    public void testCarSkeletonInstanceTypes() throws NoSuchFieldException {
-        assertThat(carSkeleton.getName(), instanceOf(String.class));
-        assertThat(carSkeleton.getDescription(), instanceOf(String.class));
+    public void testWallGetWidth() {
+        assertEquals(wall.getWidth(), 10);
     }
 
-    @DisplayName("CarSkeleton metodları doğru type değerlerine sahip mi ?")
+    @DisplayName("Wall getHeight metodu doğru çalışıyor mu ?")
     @Test
-    public void testCarSkeletonMethodTypes() throws NoSuchMethodException {
-        Method startEngineMethod = carSkeleton.getClass().getDeclaredMethod("startEngine");
-        Method driveMethod = carSkeleton.getClass().getDeclaredMethod("drive");
-
-        assertEquals(startEngineMethod.getModifiers(), 1);
-        assertEquals(driveMethod.getModifiers(), 1);
+    public void testWallGetHeight() {
+        assertEquals(wall.getHeight(), 10);
     }
 
-    @DisplayName("ElectricCar sınıf değişkenleri doğru type değerlerine sahip mi ?")
+    @DisplayName("Wall setWidth metodu doğru çalışıyor mu ?")
     @Test
-    public void testElectricCar() throws NoSuchMethodException {
-        assertThat(electricCar.getName(), instanceOf(String.class));
-        assertThat(electricCar.getDescription(), instanceOf(String.class));
-        assertThat(electricCar.getBatterySize(), instanceOf(Integer.class));
-        assertThat(electricCar.getAvgKmPerCharge(), instanceOf(Double.class));
+    public void testWallSetWidth() {
+        wall.setWidth(20);
+        assertEquals(wall.getWidth(), 20);
+
+        wall.setWidth(-10);
+        assertEquals(wall.getWidth(), 0);
     }
 
-    @DisplayName("GasPoweredCar sınıf değişkenleri doğru type değerlerine sahip mi ?")
+    @DisplayName("Wall setHeight metodu doğru çalışıyor mu ?")
     @Test
-    public void testGasPoweredCar() throws NoSuchMethodException {
-        assertThat(gasPoweredCar.getName(), instanceOf(String.class));
-        assertThat(gasPoweredCar.getDescription(), instanceOf(String.class));
-        assertThat(gasPoweredCar.getAverageKmPerLiter(), instanceOf(Double.class));
-        assertThat(gasPoweredCar.getCylinders(), instanceOf(Integer.class));
+    public void testWallSetHeight() {
+        wall.setHeight(20);
+        assertEquals(wall.getHeight(), 20);
+
+        wall.setHeight(-10);
+        assertEquals(wall.getHeight(), 0);
     }
 
-    @DisplayName("HybridCar sınıf değişkenleri doğru type değerlerine sahip mi ?")
+    @DisplayName("Wall GetArea metodu doğru çalışıyor mu ?")
     @Test
-    public void testHybridCar() throws NoSuchMethodException {
-        assertThat(hybridCar.getName(), instanceOf(String.class));
-        assertThat(hybridCar.getDescription(), instanceOf(String.class));
-        assertThat(hybridCar.getCylinders(), instanceOf(Integer.class));
-        assertThat(hybridCar.getAvgKmPerLiter(), instanceOf(Double.class));
-        assertThat(hybridCar.getBatterySize(), instanceOf(Integer.class));
-    }
+    public void testWallGetArea() {
+        wall.setWidth(10);
+        wall.setHeight(10);
+        assertEquals(wall.getArea(), 100);
 
-    @DisplayName("GasPoweredCar, ElectricCar ve HybridCar sınıf değişkenleri doğru type değerlerine sahip mi ?")
-    @Test
-    public void testCarTypes() throws NoSuchMethodException {
-        assertThat(electricCar, instanceOf(CarSkeleton.class));
-        assertThat(gasPoweredCar, instanceOf(CarSkeleton.class));
-        assertThat(hybridCar, instanceOf(CarSkeleton.class));
+        wall.setHeight(-10);
+        assertEquals(wall.getArea(), 0);
     }
 }
